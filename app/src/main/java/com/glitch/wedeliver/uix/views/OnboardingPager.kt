@@ -12,10 +12,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.glitch.wedeliver.ui.theme.WeDeliverTheme
 
 @Composable
-fun OnboardingPager(onComplete: () -> Unit) {
+fun OnboardingPager(
+//	onComplete: () -> Unit
+	navController: NavController
+) {
 	val pagerState = rememberPagerState(pageCount = { 3 })
 
 	HorizontalPager(
@@ -29,7 +34,17 @@ fun OnboardingPager(onComplete: () -> Unit) {
 			Text(text = "Onboarding Page $page")
 			if (page == 2) {
 				Button(
-					onClick = onComplete,
+					onClick = {
+						//onComplete,
+						/*PageSwitch(chosenPage = "bottombar")*/
+						navController.navigate("bottombar") {
+							popUpTo("onboarding") {
+								inclusive = true
+							}
+						}
+
+							  /*CALL BOTTOMBAR*/
+					},
 					modifier = Modifier.padding(16.dp)
 				) {
 					Text("Get Started")
@@ -42,7 +57,8 @@ fun OnboardingPager(onComplete: () -> Unit) {
 @Preview(showBackground = true, locale = "tr")
 @Composable
 fun Pre() {
+	val navController = rememberNavController()
 	WeDeliverTheme {
-		OnboardingPager(onComplete = {})
+		OnboardingPager(navController)
 	}
 }
