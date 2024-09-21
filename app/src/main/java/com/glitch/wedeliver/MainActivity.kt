@@ -10,6 +10,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.glitch.wedeliver.uix.views.BottomBarScreen
 import com.glitch.wedeliver.uix.views.OnboardingPager
+import com.glitch.wedeliver.uix.views.PageSwitch
 
 class MainActivity : ComponentActivity() {
 	override fun onCreate(savedInstanceState: Bundle?) {
@@ -18,34 +19,42 @@ class MainActivity : ComponentActivity() {
 		val sharedPreferences = getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE)
 		val isFirstLaunch = sharedPreferences.getBoolean("isFirstLaunch", true)
 
+
 		enableEdgeToEdge()
 		setContent {
 			val navController = rememberNavController()
-
+			if (isFirstLaunch) {
+				OnboardingPager(navController = navController) {
+					sharedPreferences.edit().putBoolean("isFirstLaunch", false).apply()
+				}
+				//PageSwitch("bottombar")
+			} else {
+				PageSwitch("bottombarscreen")
+			}
 			NavHost(
 				navController = navController,
-				startDestination = if (isFirstLaunch) "onboarding" else "bottombar"
+				startDestination = if (isFirstLaunch) "onboarding" else "bottombarscreen"
 			) {
 				composable("onboarding") {
-					OnboardingPager(navController = navController)
+					OnboardingPager(navController = navController) {
+						sharedPreferences.edit().putBoolean("isFirstLaunch", false).apply()
+					}
 				}
-				composable("bottombar") {
+				composable("bottombarscreen") {
 					BottomBarScreen()
 				}
 			}
 
-			if (isFirstLaunch) {
-				OnboardingPager(navController = navController) /*{
-					sharedPreferences.edit().putBoolean("isFirstLaunch", false).apply()
-					//BottomBarScreen()
-				}*/
+			/*if (isFirstLaunch) {
+				OnboardingPager(navController = navController)
+				sharedPreferences.edit().putBoolean("isFirstLaunch", false).apply()
 			} else {
-				OnboardingPager(navController) /*{
-					sharedPreferences.edit().putBoolean("isFirstLaunch", false).apply()
-					//BottomBarScreen()
-				}*/
+				BottomBarScreen()
+				sharedPreferences.edit().putBoolean("isFirstLaunch", false).apply()
 				//BottomBarScreen()
-			}
+
+				//BottomBarScreen()
+			}*/
 		}
 	}
 }

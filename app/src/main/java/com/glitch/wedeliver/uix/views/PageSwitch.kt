@@ -22,11 +22,15 @@ fun PageSwitch(chosenPage: String) {
 				//navigateBack = { navController.popBackStack() }
 			)
 		}
-		composable("detailpage") {
-			DetailPage()
-		}
-		composable("bottombar") {
+
+		composable("bottombarscreen") {
 			BottomBarScreen()
+		}
+
+		composable("onboarding") {
+			OnboardingPager(navController) {
+
+			}
 		}
 	}
 }

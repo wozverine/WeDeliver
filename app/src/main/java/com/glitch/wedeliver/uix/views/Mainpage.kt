@@ -4,11 +4,13 @@ import android.app.Activity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -89,7 +91,8 @@ fun Mainpage() {
 		}
 
 	) { paddingValues ->
-		LazyColumn(
+		LazyVerticalGrid(
+			columns = GridCells.Fixed(2),
 			modifier = Modifier
 				.fillMaxSize()
 				.padding(paddingValues)
@@ -97,10 +100,10 @@ fun Mainpage() {
 		) {
 			items(count = menuList.count()) { index ->
 				val menu = menuList[index]
-				HorizontalDivider(
-					thickness = 1.dp, color = colorResource(id = R.color.black)
-				)
+
 				Card(
+					modifier = Modifier
+						.padding(vertical = 5.dp),
 					colors = CardDefaults.cardColors(
 						containerColor = Color.White
 					)
@@ -108,18 +111,30 @@ fun Mainpage() {
 					ConstraintLayout(
 						modifier = Modifier
 							.fillMaxWidth()
-							.padding(horizontal = 5.dp)
 					) {
-						val (firstImage, text, lastImage) = createRefs()
+						val (main, firstImage, textImage, text, price) = createRefs()
 						val activity = LocalContext.current as Activity
+
+						Image(
+							modifier = Modifier
+								.constrainAs(main) {
+									start.linkTo(parent.start)
+									end.linkTo(parent.end)
+									top.linkTo(parent.top)
+									bottom.linkTo(parent.bottom)
+								},
+							painter = painterResource(R.drawable.base_main_card),
+							contentDescription = ""
+						)
 
 						Image(
 							modifier = Modifier
 								.padding(vertical = 5.dp)
 								.constrainAs(firstImage) {
 									start.linkTo(parent.start)
+									end.linkTo(parent.end)
 									top.linkTo(parent.top)
-									bottom.linkTo(parent.bottom)
+									bottom.linkTo(textImage.top)
 								}, bitmap = ImageBitmap.imageResource(
 								id = activity.resources.getIdentifier(
 									menu.yemek_resim_adi, "drawable", activity.packageName
@@ -127,31 +142,51 @@ fun Mainpage() {
 							), contentDescription = ""
 						)
 
+						Image(
+							painter = painterResource(id = R.drawable.base_main_title),
+							modifier = Modifier
+								.fillMaxSize()
+								.constrainAs(textImage) {
+									start.linkTo(parent.start)
+									end.linkTo(parent.end)
+									top.linkTo(firstImage.bottom)
+									//bottom.linkTo(parent.bottom)
+								},
+							contentDescription = ""
+						)
+
 						Text(
 							modifier = Modifier
-								.padding(vertical = 14.dp)
-								.padding(start = 8.dp)
+								.padding(vertical = 4.dp)
 								.constrainAs(text) {
-									start.linkTo(firstImage.end)
-									top.linkTo(parent.top)
-									bottom.linkTo(parent.bottom)
+									start.linkTo(parent.start)
+									end.linkTo(parent.end)
+									top.linkTo(textImage.top)
+									bottom.linkTo(textImage.bottom)
 								},
 							text = menu.yemek_adi,
 							fontSize = 14.sp,
 							color = Color.Black
 						)
 
-						Image(
+
+						Row(
 							modifier = Modifier
-								.padding(vertical = 14.dp)
-								.constrainAs(lastImage) {
+								.padding(vertical = 4.dp)
+								.constrainAs(price) {
+									start.linkTo(parent.start)
 									end.linkTo(parent.end)
-									top.linkTo(parent.top)
+									top.linkTo(text.bottom)
 									bottom.linkTo(parent.bottom)
 								},
-							painter = painterResource(id = R.drawable.backicon),
-							contentDescription = null
-						)
+						) {
+							Text(text = "270 TL")
+
+							Image(
+								painter = painterResource(id = R.drawable.add_button_main),
+								contentDescription = ""
+							)
+						}
 					}
 				}
 			}
