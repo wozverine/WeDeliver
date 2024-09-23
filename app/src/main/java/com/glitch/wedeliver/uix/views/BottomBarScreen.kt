@@ -48,7 +48,7 @@ fun BottomBarScreen() {
 							},
 							icon = {
 								Icon(
-									painter = painterResource(id = R.drawable.search_vector),
+									painter = painterResource(id = R.drawable.ic_home_bar),
 									contentDescription = "",
 									tint = if (selectedItem.value == 0) selectedColor else unselectedColor
 								)
@@ -73,14 +73,14 @@ fun BottomBarScreen() {
 							},
 							icon = {
 								Icon(
-									painter = painterResource(id = R.drawable.search_vector),
+									painter = painterResource(id = R.drawable.ic_favorites),
 									contentDescription = "",
 									tint = if (selectedItem.value == 1) selectedColor else unselectedColor
 								)
 							},
 							label = {
 								Text(
-									text = "Category",
+									text = "Favoriler",
 									color = if (selectedItem.value == 1) selectedColor else unselectedColor
 								)
 							},
@@ -98,14 +98,14 @@ fun BottomBarScreen() {
 							},
 							icon = {
 								Icon(
-									painter = painterResource(id = R.drawable.search_vector),
+									painter = painterResource(id = R.drawable.ic_cart),
 									contentDescription = "",
 									tint = if (selectedItem.value == 2) selectedColor else unselectedColor
 								)
 							},
 							label = {
 								Text(
-									text = "Favorites",
+									text = "Sepet",
 									color = if (selectedItem.value == 2) selectedColor else unselectedColor
 								)
 							},
@@ -116,7 +116,7 @@ fun BottomBarScreen() {
 							)
 						)
 
-						NavigationBarItem(
+						/*NavigationBarItem(
 							selected = selectedItem.value == 3,
 							onClick = {
 								selectedItem.value = 3
@@ -139,9 +139,9 @@ fun BottomBarScreen() {
 								unselectedIconColor = unselectedColor,
 								indicatorColor = Color.White
 							)
-						)
+						)*/
 
-						NavigationBarItem(
+						/*NavigationBarItem(
 							selected = selectedItem.value == 4,
 							onClick = {
 								selectedItem.value = 4
@@ -164,7 +164,7 @@ fun BottomBarScreen() {
 								unselectedIconColor = unselectedColor,
 								indicatorColor = Color.White
 							)
-						)
+						)*/
 					})
 			}
 		}) { paddingValues ->
@@ -229,15 +229,11 @@ fun BottomBarScreen() {
 					}
 				}*/
 
-				3 -> {
-					showBottomBar.value = false
-					CartPage() /*{
-						*//*showBottomBar.value = true
-						selectedItem.value = 0*//*
-					}*/
+				1 -> {
+					PageSwitch(chosenPage = "favoritespage")
 				}
 
-				4 -> {
+				2 -> {
 					PageSwitch(chosenPage = "cartpage")
 				}
 			}

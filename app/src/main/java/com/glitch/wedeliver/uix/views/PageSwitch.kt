@@ -28,9 +28,11 @@ fun PageSwitch(chosenPage: String) {
 		}
 
 		composable("onboarding") {
-			OnboardingPager(navController) {
+			OnboardingPager(navController){}
+		}
 
-			}
+		composable("favoritespage") {
+			FavoritesPage()
 		}
 	}
 }

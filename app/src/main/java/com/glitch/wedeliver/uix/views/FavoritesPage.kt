@@ -2,16 +2,12 @@ package com.glitch.wedeliver.uix.views
 
 import android.app.Activity
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -26,44 +22,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.glitch.wedeliver.R
 import com.glitch.wedeliver.data.entitiy.Foods
-import com.glitch.wedeliver.ui.theme.WeDeliverTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CartPage() {
-	@Composable
-	fun DrawableBoxButton(
-		drawable: Painter,
-		onClick: () -> Unit,
-		modifier: Modifier = Modifier
-	) {
-		Box(
-			modifier = modifier
-				//.size(56.dp)
-				.fillMaxWidth()
-				.clickable(onClick = onClick),
-			contentAlignment = Alignment.Center
-		) {
-			Image(
-				painter = drawable,
-				contentDescription = "Box Button Icon",
-				modifier = Modifier.size(24.dp)
-			)
-		}
-	}
-
+fun FavoritesPage(){
 	val menuList = remember { mutableStateListOf<Foods>() }
 
 	LaunchedEffect(key1 = true) {
@@ -86,7 +58,7 @@ fun CartPage() {
 		topBar = {
 			CenterAlignedTopAppBar(
 				title = {
-					Text(text = "Sepetim")
+					Text(text = "Favoriler")
 				},
 				actions = {}
 			)
@@ -101,7 +73,7 @@ fun CartPage() {
 		) {
 
 			val (LazyColumn, CartButton) = createRefs()
-			LazyColumn(
+			androidx.compose.foundation.lazy.LazyColumn(
 				//columns = GridCells.Fixed(2),
 				modifier = Modifier
 					.fillMaxSize()
@@ -226,26 +198,6 @@ fun CartPage() {
 				}
 			}
 
-			DrawableBoxButton(
-				painterResource(id = R.drawable.cart_confirm),
-				onClick = {
-					println("DrawableButton clicked!")
-				},
-				modifier = Modifier.constrainAs(CartButton) {
-					//top.linkTo(LazyColumn.bottom, margin = 10.dp)
-					start.linkTo(parent.start, margin = 16.dp)
-					end.linkTo(parent.end, margin = 16.dp)
-					bottom.linkTo(parent.bottom, margin = 16.dp)
-				}
-			)
 		}
-	}
-}
-
-@Preview(showBackground = true)
-@Composable
-fun Prevprev() {
-	WeDeliverTheme {
-		CartPage()
 	}
 }

@@ -73,6 +73,7 @@ dependencies {
 	implementation("androidx.navigation:navigation-compose:2.7.6")
 	implementation("androidx.lifecycle:lifecycle-viewmodel:2.5.1")
 	implementation("androidx.activity:activity-ktx:1.6.1")
+	implementation("androidx.compose.runtime:runtime-livedata:1.5.4")
 
 	implementation("androidx.datastore:datastore-preferences:1.0.0")
 	implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.5.1")
@@ -91,4 +92,7 @@ dependencies {
 	implementation("com.airbnb.android:lottie-compose:6.5.0")
 	implementation("androidx.compose.foundation:foundation:1.7.1")
 
+	implementation("com.squareup.retrofit2:retrofit:2.6.0")
+	implementation("com.google.code.gson:gson:2.9.0")
+	implementation("com.squareup.retrofit2:converter-gson:2.5.0")
 }
