@@ -18,14 +18,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import com.glitch.wedeliver.R
-import com.glitch.wedeliver.ui.theme.WeDeliverTheme
 import com.glitch.wedeliver.ui.theme.Yellow1
 import com.glitch.wedeliver.ui.theme.Yellow2
+import com.glitch.wedeliver.uix.viewmodel.CartViewModel
+import com.glitch.wedeliver.uix.viewmodel.DetailViewModel
+import com.glitch.wedeliver.uix.viewmodel.MainpageViewModel
 
 @Composable
-fun BottomBarScreen() {
+fun BottomBarScreen(
+	mainpageViewModel: MainpageViewModel,
+	cartViewModel: CartViewModel,
+	detailViewModel: DetailViewModel
+) {
 	val selectedItem = remember { mutableStateOf(0) }
 	val showBottomBar = remember { mutableStateOf(true) }
 	val tabIndex = remember { mutableStateOf(0) }
@@ -115,56 +120,6 @@ fun BottomBarScreen() {
 								indicatorColor = Color.White
 							)
 						)
-
-						/*NavigationBarItem(
-							selected = selectedItem.value == 3,
-							onClick = {
-								selectedItem.value = 3
-							},
-							icon = {
-								Icon(
-									painter = painterResource(id = R.drawable.search_vector),
-									contentDescription = "",
-									tint = if (selectedItem.value == 3) selectedColor else unselectedColor
-								)
-							},
-							label = {
-								Text(
-									text = "Cart",
-									color = if (selectedItem.value == 3) selectedColor else unselectedColor
-								)
-							},
-							colors = NavigationBarItemDefaults.colors(
-								selectedIconColor = selectedColor,
-								unselectedIconColor = unselectedColor,
-								indicatorColor = Color.White
-							)
-						)*/
-
-						/*NavigationBarItem(
-							selected = selectedItem.value == 4,
-							onClick = {
-								selectedItem.value = 4
-							},
-							icon = {
-								Icon(
-									painter = painterResource(id = R.drawable.search_vector),
-									contentDescription = "",
-									//tint = if (selectedItem.value == 4) selectedColor else unselectedColor
-								)
-							},
-							label = {
-								Text(
-									text = "Account",
-									color = if (selectedItem.value == 4) selectedColor else unselectedColor
-								)
-							},
-							colors = NavigationBarItemDefaults.colors(
-								selectedIconColor = selectedColor,
-								unselectedIconColor = unselectedColor,
-								indicatorColor = Color.White
-							)
-						)*/
 					})
 			}
 		}) { paddingValues ->
@@ -205,7 +160,12 @@ fun BottomBarScreen() {
 						}
 					}
 				}*/
-				0 -> PageSwitch(chosenPage = "mainpage")
+				0 -> PageSwitch(
+					mainpageViewModel = mainpageViewModel,
+					cartViewModel = cartViewModel,
+					detailViewModel = detailViewModel,
+					chosenPage = "mainpage"
+				)
 				/*1 -> PageSwitch(chosenPage = "categorypage")
 				2 -> PageSwitch(chosenPage = "favoritespage")*/
 				/*2 -> {
@@ -230,24 +190,23 @@ fun BottomBarScreen() {
 				}*/
 
 				1 -> {
-					PageSwitch(chosenPage = "favoritespage")
+					PageSwitch(
+						mainpageViewModel = mainpageViewModel,
+						cartViewModel = cartViewModel,
+						detailViewModel = detailViewModel,
+						chosenPage = "favoritespage"
+					)
 				}
 
 				2 -> {
-					PageSwitch(chosenPage = "cartpage")
+					PageSwitch(
+						mainpageViewModel = mainpageViewModel,
+						cartViewModel = cartViewModel,
+						detailViewModel = detailViewModel,
+						chosenPage = "cartpage"
+					)
 				}
 			}
 		}
-	}
-}
-
-@Preview(
-	showBackground = true
-)
-@Composable
-fun BottomBarPreview() {
-	//val navController = rememberNavController()
-	WeDeliverTheme {
-		BottomBarScreen()
 	}
 }

@@ -5,20 +5,29 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.glitch.wedeliver.uix.viewmodel.CartViewModel
+import com.glitch.wedeliver.uix.viewmodel.DetailViewModel
+import com.glitch.wedeliver.uix.viewmodel.MainpageViewModel
 import com.glitch.wedeliver.uix.views.BottomBarScreen
 import com.glitch.wedeliver.uix.views.OnboardingPager
 import com.glitch.wedeliver.uix.views.PageSwitch
+import dagger.hilt.android.AndroidEntryPoint
 
+
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+	val mainpageViewModel: MainpageViewModel by viewModels()
+	val cartViewModel: CartViewModel by viewModels()
+	val detailViewModel: DetailViewModel by viewModels()
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 
 		val sharedPreferences = getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE)
 		val isFirstLaunch = sharedPreferences.getBoolean("isFirstLaunch", true)
-
 
 		enableEdgeToEdge()
 		setContent {
@@ -29,7 +38,12 @@ class MainActivity : ComponentActivity() {
 				}
 				//PageSwitch("bottombar")
 			} else {
-				PageSwitch("bottombarscreen")
+				PageSwitch(
+					mainpageViewModel,
+					cartViewModel,
+					detailViewModel = detailViewModel,
+					"bottombarscreen"
+				)
 			}
 			NavHost(
 				navController = navController,
@@ -41,7 +55,11 @@ class MainActivity : ComponentActivity() {
 					}
 				}
 				composable("bottombarscreen") {
-					BottomBarScreen()
+					BottomBarScreen(
+						mainpageViewModel = mainpageViewModel,
+						cartViewModel = cartViewModel,
+						detailViewModel = detailViewModel
+					)
 				}
 			}
 

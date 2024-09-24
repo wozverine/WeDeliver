@@ -1,6 +1,6 @@
 package com.glitch.wedeliver.uix.views
 
-import android.app.Activity
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -20,29 +19,27 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
+import coil.compose.rememberAsyncImagePainter
+import coil.request.ImageRequest
+import coil.transform.CircleCropTransformation
 import com.glitch.wedeliver.R
-import com.glitch.wedeliver.data.entitiy.Foods
-import com.glitch.wedeliver.ui.theme.WeDeliverTheme
+import com.glitch.wedeliver.uix.viewmodel.CartViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CartPage() {
+fun CartPage(cartViewModel: CartViewModel) {
 	@Composable
 	fun DrawableBoxButton(
 		drawable: Painter,
@@ -51,36 +48,30 @@ fun CartPage() {
 	) {
 		Box(
 			modifier = modifier
-				//.size(56.dp)
-				.fillMaxWidth()
 				.clickable(onClick = onClick),
 			contentAlignment = Alignment.Center
 		) {
 			Image(
 				painter = drawable,
 				contentDescription = "Box Button Icon",
-				modifier = Modifier.size(24.dp)
 			)
 		}
 	}
 
-	val menuList = remember { mutableStateListOf<Foods>() }
+	val menuList = cartViewModel.cartList.observeAsState(listOf())
 
-	LaunchedEffect(key1 = true) {
-		val f1 = Foods(1, "Ayran", "img", 40)
-		val f2 = Foods(2, "Kadayıf", "img", 50)
-		val f3 = Foods(3, "Izgara", "img", 60)
-		val f4 = Foods(4, "Tavuk", "img", 70)
-		val f5 = Foods(5, "Et", "img", 80)
-		val f6 = Foods(6, "Yemek", "img", 90)
-
-		menuList.add(f1)
-		menuList.add(f2)
-		menuList.add(f3)
-		menuList.add(f4)
-		menuList.add(f5)
-		menuList.add(f6)
+	if (menuList.value.isEmpty()) {
+		println("No Cart item available")
 	}
+
+	/*LaunchedEffect(key1 = true) {
+		cartViewModel.cartScan()
+	}*/
+
+	LaunchedEffect(menuList.value) {
+		cartViewModel.cartScan()
+	}
+
 
 	Scaffold(
 		topBar = {
@@ -100,152 +91,192 @@ fun CartPage() {
 				.padding(paddingValues)
 		) {
 
-			val (LazyColumn, CartButton) = createRefs()
+			val (LazyColumn, CartButton, CartPrice) = createRefs()
+			if (menuList.value.isEmpty()) {
+				Log.d("Cart", "Cart empty")
+			}
 			LazyColumn(
-				//columns = GridCells.Fixed(2),
 				modifier = Modifier
-					.fillMaxSize()
-					//.padding(paddingValues)
+					.fillMaxWidth()
+					.padding(top = 60.dp)
 					.constrainAs(LazyColumn) {
 						start.linkTo(parent.start)
 						end.linkTo(parent.end)
 						top.linkTo(parent.top)
-						//bottom.linkTo(LazyVerticalGrid.top)
-					},
-				//.background(Color.White)
+						bottom.linkTo(CartButton.top)
+					}
+
 			) {
-				items(count = menuList.count()) { index ->
-					val menu = menuList[index]
+				items(
+					count = menuList.value.count(),
+					//) { index ->
 
-					Card(
-						modifier = Modifier
-							.padding(vertical = 5.dp),
-						colors = CardDefaults.cardColors(
-							containerColor = Color.White
-						)
-					) {
-						ConstraintLayout(
+					itemContent = {
+						val menu = menuList.value[it]
+						Card(
 							modifier = Modifier
-								.fillMaxWidth()
+								.padding(vertical = 5.dp),
+							colors = CardDefaults.cardColors(
+								containerColor = Color.White
+							)
 						) {
-							val (mainback, firstImage, textImage, row, rowsecond) = createRefs()
-							val activity = LocalContext.current as Activity
-
-							Image(
+							ConstraintLayout(
 								modifier = Modifier
-									.constrainAs(mainback) {
-										start.linkTo(parent.start)
-										end.linkTo(parent.end)
-										top.linkTo(parent.top)
-										bottom.linkTo(parent.bottom)
-									},
-								painter = painterResource(R.drawable.cart_card),
-								contentDescription = "",
-								contentScale = ContentScale.FillWidth
-							)
-
-							Image(
-								modifier = Modifier
-									.padding(vertical = 5.dp)
-									.constrainAs(firstImage) {
-										start.linkTo(mainback.start)
-										//end.linkTo(mainback.end)
-										top.linkTo(mainback.top)
-										bottom.linkTo(mainback.bottom)
-									}, bitmap = ImageBitmap.imageResource(
-									id = activity.resources.getIdentifier(
-										menu.yemek_resim_adi, "drawable", activity.packageName
-									)
-								), contentDescription = ""
-							)
-
-							Column(
-								modifier = Modifier
-									.constrainAs(row) {
-										start.linkTo(firstImage.end)
-										//end.linkTo(parent.end)
-										end.linkTo(rowsecond.start)
-										top.linkTo(mainback.top)
-										bottom.linkTo(mainback.bottom)
-									},
-								verticalArrangement = Arrangement.SpaceEvenly,
-								horizontalAlignment = Alignment.CenterHorizontally
+									.fillMaxWidth()
 							) {
-								Text(
+								val (mainback, firstImage, row, rowsecond) = createRefs()
+
+								Image(
 									modifier = Modifier
-										.padding(vertical = 4.dp),
-									text = menu.yemek_adi,
-									fontSize = 20.sp,
-									color = Color.Black,
-									textAlign = TextAlign.Center
+										.constrainAs(mainback) {
+											start.linkTo(parent.start)
+											end.linkTo(parent.end)
+											top.linkTo(parent.top)
+											bottom.linkTo(parent.bottom)
+										},
+									painter = painterResource(R.drawable.cart_card),
+									contentDescription = "",
+									contentScale = ContentScale.FillWidth
 								)
 
-								Text(
-									text = "270 TL",
-									fontSize = 16.sp,
-									textAlign = TextAlign.Center
-								)
-							}
-
-							Column(
-								modifier = Modifier
-									.padding(end = 30.dp)
-									.constrainAs(rowsecond) {
-										//start.linkTo(row.start)
-										end.linkTo(mainback.end)
-										top.linkTo(mainback.top)
-										bottom.linkTo(mainback.bottom)
-									},
-								verticalArrangement = Arrangement.SpaceEvenly,
-								horizontalAlignment = Alignment.CenterHorizontally
-							) {
-								Text(
+								Image(
 									modifier = Modifier
-										.padding(vertical = 4.dp),
-									text = "2",
-									fontSize = 16.sp,
-									color = Color.Black
+										.padding(vertical = 5.dp)
+										.constrainAs(firstImage) {
+											start.linkTo(mainback.start)
+											top.linkTo(mainback.top)
+											bottom.linkTo(mainback.bottom)
+										},
+									painter = rememberAsyncImagePainter(
+										model = ImageRequest.Builder(LocalContext.current)
+											.data("http://kasimadalan.pe.hu/yemekler/resimler/${menu.yemek_resim_adi}")
+											.crossfade(true)
+											.transformations(CircleCropTransformation())
+											.error(R.drawable.img) /*// Replace with a local error drawable TODO*/
+											.placeholder(R.drawable.img) /*// Replace with a local error drawable TODO*/
+											.listener(
+												onStart = {
+													Log.d("Image Loading", "Image Loading")
+													Log.d(
+														"Image URL",
+														"http://kasimadalan.pe.hu/yemekler/resimler/${menu.yemek_resim_adi}"
+													)
+												},
+												onError = { _, throwable ->
+													Log.e("Image Error", "Error")
+												},
+												onSuccess = { _, _ ->
+													Log.d(
+														"Image Loaded",
+														"Image loaded for ${menu.yemek_adi}"
+													)
+												}
+											)
+											.build()
+									),
+									contentDescription = ""
 								)
 
-								Row(
+								Column(
 									modifier = Modifier
-										.padding(vertical = 10.dp),
+										.constrainAs(row) {
+											start.linkTo(firstImage.end)
+											end.linkTo(rowsecond.start)
+											top.linkTo(mainback.top)
+											bottom.linkTo(mainback.bottom)
+										},
+									verticalArrangement = Arrangement.SpaceEvenly,
+									horizontalAlignment = Alignment.CenterHorizontally
 								) {
-									Image(
-										painter = painterResource(id = R.drawable.cart_plus),
-										contentDescription = ""
+									Text(
+										modifier = Modifier
+											.padding(vertical = 4.dp),
+										text = menu.yemek_adi,
+										fontSize = 20.sp,
+										color = Color.Black,
+										textAlign = TextAlign.Center
 									)
-									Image(
-										painter = painterResource(id = R.drawable.cart_minus),
-										contentDescription = ""
+
+									Text(
+										text = "${menu.yemek_fiyat} TL",
+										fontSize = 16.sp,
+										textAlign = TextAlign.Center
 									)
 								}
+
+								Column(
+									modifier = Modifier
+										.padding(end = 30.dp)
+										.constrainAs(rowsecond) {
+											end.linkTo(mainback.end)
+											top.linkTo(mainback.top)
+											bottom.linkTo(mainback.bottom)
+										},
+									verticalArrangement = Arrangement.SpaceEvenly,
+									horizontalAlignment = Alignment.CenterHorizontally
+								) {
+									Text(
+										modifier = Modifier
+											.padding(vertical = 4.dp),
+										text = menu.yemek_siparis_adet,
+										fontSize = 16.sp,
+										color = Color.Black
+									)
+
+									Row(
+										modifier = Modifier
+											.padding(vertical = 10.dp),
+									) {
+										DrawableBoxButton(
+											drawable = painterResource(id = R.drawable.cart_plus),
+											onClick = {
+												cartViewModel.saveCart(
+													menu.yemek_adi,
+													menu.yemek_resim_adi,
+													menu.yemek_fiyat.toInt(),
+													menu.yemek_siparis_adet.toInt()
+												)
+											})
+										DrawableBoxButton(
+											drawable = painterResource(id = R.drawable.cart_minus),
+											onClick = {
+												cartViewModel.deleteCart(menu.sepet_yemek_id.toInt())
+											})
+									}
+								}
 							}
+
 						}
 					}
-				}
+				)
 			}
 
 			DrawableBoxButton(
 				painterResource(id = R.drawable.cart_confirm),
 				onClick = {
-					println("DrawableButton clicked!")
+					println("DrawableButton clicked!")/*TODO Lottie*/
 				},
-				modifier = Modifier.constrainAs(CartButton) {
-					//top.linkTo(LazyColumn.bottom, margin = 10.dp)
-					start.linkTo(parent.start, margin = 16.dp)
-					end.linkTo(parent.end, margin = 16.dp)
-					bottom.linkTo(parent.bottom, margin = 16.dp)
-				}
+				modifier = Modifier
+					.constrainAs(CartButton) {
+						top.linkTo(LazyColumn.bottom, margin = 10.dp)
+						start.linkTo(parent.start, margin = 16.dp)
+						end.linkTo(CartPrice.start, margin = 16.dp)
+						bottom.linkTo(parent.bottom, margin = 8.dp)
+					}
+			)
+
+			Text(
+				text = "500 TL", /*TODO*/
+				fontSize = 20.sp,
+				textAlign = TextAlign.Center,
+				modifier = Modifier
+					.constrainAs(CartPrice) {
+						top.linkTo(LazyColumn.bottom, margin = 10.dp)
+						start.linkTo(CartButton.end, margin = 16.dp)
+						end.linkTo(parent.end, margin = 16.dp)
+						bottom.linkTo(parent.bottom, margin = 8.dp)
+					}
 			)
 		}
-	}
-}
-
-@Preview(showBackground = true)
-@Composable
-fun Prevprev() {
-	WeDeliverTheme {
-		CartPage()
 	}
 }

@@ -1,6 +1,6 @@
-package com.glitch.wedeliver.data.entitiy
+package com.glitch.wedeliver.data.entity
 
-data class Foods(
+data class FoodItem(
 	var yemek_id: Int,
 	var yemek_adi: String,
 	var yemek_resim_adi: String,

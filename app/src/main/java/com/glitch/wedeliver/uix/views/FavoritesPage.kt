@@ -31,20 +31,20 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.glitch.wedeliver.R
-import com.glitch.wedeliver.data.entitiy.Foods
+import com.glitch.wedeliver.data.entity.FoodItem
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun FavoritesPage(){
-	val menuList = remember { mutableStateListOf<Foods>() }
+fun FavoritesPage() {
+	val menuList = remember { mutableStateListOf<FoodItem>() }
 
 	LaunchedEffect(key1 = true) {
-		val f1 = Foods(1, "Ayran", "img", 40)
-		val f2 = Foods(2, "Kadayıf", "img", 50)
-		val f3 = Foods(3, "Izgara", "img", 60)
-		val f4 = Foods(4, "Tavuk", "img", 70)
-		val f5 = Foods(5, "Et", "img", 80)
-		val f6 = Foods(6, "Yemek", "img", 90)
+		val f1 = FoodItem(1, "Ayran", "img", 40, 2)
+		val f2 = FoodItem(2, "Kadayıf", "img", 5, 20)
+		val f3 = FoodItem(3, "Izgara", "img", 60, 2)
+		val f4 = FoodItem(4, "Tavuk", "img", 70, 2)
+		val f5 = FoodItem(5, "Et", "img", 80, 2)
+		val f6 = FoodItem(6, "Yemek", "img", 90, 2)
 
 		menuList.add(f1)
 		menuList.add(f2)
