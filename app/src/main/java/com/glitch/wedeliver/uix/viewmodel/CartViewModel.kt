@@ -15,7 +15,7 @@ class CartViewModel @Inject constructor(var fRepo: FoodsRepository) : ViewModel(
 	var cartList = MutableLiveData<List<CartItem>>()
 
 	init {
-		//cartScan()
+		cartScan()
 	}
 
 	fun saveCart(
