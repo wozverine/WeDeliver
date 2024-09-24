@@ -94,161 +94,162 @@ fun CartPage(cartViewModel: CartViewModel) {
 			val (LazyColumn, CartButton, CartPrice) = createRefs()
 			if (menuList.value.isEmpty()) {
 				Log.d("Cart", "Cart empty")
-			}
-			LazyColumn(
-				modifier = Modifier
-					.fillMaxWidth()
-					.padding(top = 60.dp)
-					.constrainAs(LazyColumn) {
-						start.linkTo(parent.start)
-						end.linkTo(parent.end)
-						top.linkTo(parent.top)
-						bottom.linkTo(CartButton.top)
-					}
+			} else {
+				LazyColumn(
+					modifier = Modifier
+						.fillMaxWidth()
+						.padding(top = 60.dp)
+						.constrainAs(LazyColumn) {
+							start.linkTo(parent.start)
+							end.linkTo(parent.end)
+							top.linkTo(parent.top)
+							bottom.linkTo(CartButton.top)
+						}
 
-			) {
-				items(
-					count = menuList.value.count(),
-					//) { index ->
+				) {
+					items(
+						count = menuList.value.count(),
+						//) { index ->
 
-					itemContent = {
-						val menu = menuList.value[it]
-						Card(
-							modifier = Modifier
-								.padding(vertical = 5.dp),
-							colors = CardDefaults.cardColors(
-								containerColor = Color.White
-							)
-						) {
-							ConstraintLayout(
+						itemContent = {
+							val menu = menuList.value[it]
+							Card(
 								modifier = Modifier
-									.fillMaxWidth()
+									.padding(vertical = 5.dp),
+								colors = CardDefaults.cardColors(
+									containerColor = Color.White
+								)
 							) {
-								val (mainback, firstImage, row, rowsecond) = createRefs()
-
-								Image(
+								ConstraintLayout(
 									modifier = Modifier
-										.constrainAs(mainback) {
-											start.linkTo(parent.start)
-											end.linkTo(parent.end)
-											top.linkTo(parent.top)
-											bottom.linkTo(parent.bottom)
-										},
-									painter = painterResource(R.drawable.cart_card),
-									contentDescription = "",
-									contentScale = ContentScale.FillWidth
-								)
-
-								Image(
-									modifier = Modifier
-										.padding(vertical = 5.dp)
-										.constrainAs(firstImage) {
-											start.linkTo(mainback.start)
-											top.linkTo(mainback.top)
-											bottom.linkTo(mainback.bottom)
-										},
-									painter = rememberAsyncImagePainter(
-										model = ImageRequest.Builder(LocalContext.current)
-											.data("http://kasimadalan.pe.hu/yemekler/resimler/${menu.yemek_resim_adi}")
-											.crossfade(true)
-											.transformations(CircleCropTransformation())
-											.error(R.drawable.img) /*// Replace with a local error drawable TODO*/
-											.placeholder(R.drawable.img) /*// Replace with a local error drawable TODO*/
-											.listener(
-												onStart = {
-													Log.d("Image Loading", "Image Loading")
-													Log.d(
-														"Image URL",
-														"http://kasimadalan.pe.hu/yemekler/resimler/${menu.yemek_resim_adi}"
-													)
-												},
-												onError = { _, throwable ->
-													Log.e("Image Error", "Error")
-												},
-												onSuccess = { _, _ ->
-													Log.d(
-														"Image Loaded",
-														"Image loaded for ${menu.yemek_adi}"
-													)
-												}
-											)
-											.build()
-									),
-									contentDescription = ""
-								)
-
-								Column(
-									modifier = Modifier
-										.constrainAs(row) {
-											start.linkTo(firstImage.end)
-											end.linkTo(rowsecond.start)
-											top.linkTo(mainback.top)
-											bottom.linkTo(mainback.bottom)
-										},
-									verticalArrangement = Arrangement.SpaceEvenly,
-									horizontalAlignment = Alignment.CenterHorizontally
+										.fillMaxWidth()
 								) {
-									Text(
+									val (mainback, firstImage, row, rowsecond) = createRefs()
+
+									Image(
 										modifier = Modifier
-											.padding(vertical = 4.dp),
-										text = menu.yemek_adi,
-										fontSize = 20.sp,
-										color = Color.Black,
-										textAlign = TextAlign.Center
+											.constrainAs(mainback) {
+												start.linkTo(parent.start)
+												end.linkTo(parent.end)
+												top.linkTo(parent.top)
+												bottom.linkTo(parent.bottom)
+											},
+										painter = painterResource(R.drawable.cart_card),
+										contentDescription = "",
+										contentScale = ContentScale.FillWidth
 									)
 
-									Text(
-										text = "${menu.yemek_fiyat} TL",
-										fontSize = 16.sp,
-										textAlign = TextAlign.Center
-									)
-								}
-
-								Column(
-									modifier = Modifier
-										.padding(end = 30.dp)
-										.constrainAs(rowsecond) {
-											end.linkTo(mainback.end)
-											top.linkTo(mainback.top)
-											bottom.linkTo(mainback.bottom)
-										},
-									verticalArrangement = Arrangement.SpaceEvenly,
-									horizontalAlignment = Alignment.CenterHorizontally
-								) {
-									Text(
+									Image(
 										modifier = Modifier
-											.padding(vertical = 4.dp),
-										text = menu.yemek_siparis_adet,
-										fontSize = 16.sp,
-										color = Color.Black
-									)
-
-									Row(
-										modifier = Modifier
-											.padding(vertical = 10.dp),
-									) {
-										DrawableBoxButton(
-											drawable = painterResource(id = R.drawable.cart_plus),
-											onClick = {
-												cartViewModel.saveCart(
-													menu.yemek_adi,
-													menu.yemek_resim_adi,
-													menu.yemek_fiyat.toInt(),
-													menu.yemek_siparis_adet.toInt()
+											.padding(vertical = 5.dp)
+											.constrainAs(firstImage) {
+												start.linkTo(mainback.start)
+												top.linkTo(mainback.top)
+												bottom.linkTo(mainback.bottom)
+											},
+										painter = rememberAsyncImagePainter(
+											model = ImageRequest.Builder(LocalContext.current)
+												.data("http://kasimadalan.pe.hu/yemekler/resimler/${menu.yemek_resim_adi}")
+												.crossfade(true)
+												.transformations(CircleCropTransformation())
+												.error(R.drawable.img) /*// Replace with a local error drawable TODO*/
+												.placeholder(R.drawable.img) /*// Replace with a local error drawable TODO*/
+												.listener(
+													onStart = {
+														Log.d("Image Loading", "Image Loading")
+														Log.d(
+															"Image URL",
+															"http://kasimadalan.pe.hu/yemekler/resimler/${menu.yemek_resim_adi}"
+														)
+													},
+													onError = { _, throwable ->
+														Log.e("Image Error", "Error")
+													},
+													onSuccess = { _, _ ->
+														Log.d(
+															"Image Loaded",
+															"Image loaded for ${menu.yemek_adi}"
+														)
+													}
 												)
-											})
-										DrawableBoxButton(
-											drawable = painterResource(id = R.drawable.cart_minus),
-											onClick = {
-												cartViewModel.deleteCart(menu.sepet_yemek_id.toInt())
-											})
+												.build()
+										),
+										contentDescription = ""
+									)
+
+									Column(
+										modifier = Modifier
+											.constrainAs(row) {
+												start.linkTo(firstImage.end)
+												end.linkTo(rowsecond.start)
+												top.linkTo(mainback.top)
+												bottom.linkTo(mainback.bottom)
+											},
+										verticalArrangement = Arrangement.SpaceEvenly,
+										horizontalAlignment = Alignment.CenterHorizontally
+									) {
+										Text(
+											modifier = Modifier
+												.padding(vertical = 4.dp),
+											text = menu.yemek_adi,
+											fontSize = 20.sp,
+											color = Color.Black,
+											textAlign = TextAlign.Center
+										)
+
+										Text(
+											text = "${menu.yemek_fiyat} TL",
+											fontSize = 16.sp,
+											textAlign = TextAlign.Center
+										)
+									}
+
+									Column(
+										modifier = Modifier
+											.padding(end = 30.dp)
+											.constrainAs(rowsecond) {
+												end.linkTo(mainback.end)
+												top.linkTo(mainback.top)
+												bottom.linkTo(mainback.bottom)
+											},
+										verticalArrangement = Arrangement.SpaceEvenly,
+										horizontalAlignment = Alignment.CenterHorizontally
+									) {
+										Text(
+											modifier = Modifier
+												.padding(vertical = 4.dp),
+											text = menu.yemek_siparis_adet,
+											fontSize = 16.sp,
+											color = Color.Black
+										)
+
+										Row(
+											modifier = Modifier
+												.padding(vertical = 10.dp),
+										) {
+											DrawableBoxButton(
+												drawable = painterResource(id = R.drawable.cart_plus),
+												onClick = {
+													cartViewModel.saveCart(
+														menu.yemek_adi,
+														menu.yemek_resim_adi,
+														menu.yemek_fiyat.toInt(),
+														menu.yemek_siparis_adet.toInt()
+													)
+												})
+											DrawableBoxButton(
+												drawable = painterResource(id = R.drawable.cart_minus),
+												onClick = {
+													cartViewModel.deleteCart(menu.sepet_yemek_id.toInt())
+												})
+										}
 									}
 								}
-							}
 
+							}
 						}
-					}
-				)
+					)
+				}
 			}
 
 			DrawableBoxButton(

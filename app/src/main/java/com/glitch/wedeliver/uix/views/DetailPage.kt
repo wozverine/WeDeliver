@@ -28,13 +28,14 @@ import coil.request.ImageRequest
 import coil.transform.CircleCropTransformation
 import com.glitch.wedeliver.R
 import com.glitch.wedeliver.data.entity.CartItem
+import com.glitch.wedeliver.data.entity.FoodItem
 import com.glitch.wedeliver.ui.theme.Yellow2
 import com.glitch.wedeliver.uix.viewmodel.DetailViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DetailPage(
-	nesne: CartItem, detailViewModel: DetailViewModel
+	nesne: FoodItem, detailViewModel: DetailViewModel
 ) {
 	@Composable
 	fun DrawableBoxButton(
@@ -158,24 +159,31 @@ fun DetailPage(
 				DrawableBoxButton(
 					drawable = painterResource(id = R.drawable.cart_plus),
 					onClick = {
-						val updatedQuantity = nesne.yemek_siparis_adet + 1
-						val updatedItem = nesne.copy(yemek_siparis_adet = updatedQuantity)
-						detailViewModel.updateCart(updatedItem)
+						val updatedQuantity = (nesne.yemek_siparis_adet.toInt() ?: 0) + 1
+						val updatedItem =
+							nesne.copy(yemek_siparis_adet = updatedQuantity)
+						detailViewModel.saveCart(
+							updatedItem.yemek_adi,
+							updatedItem.yemek_resim_adi,
+							updatedItem.yemek_fiyat.toInt(),
+							updatedItem.yemek_siparis_adet.toInt()
+						)
 					}
 				)
 
-				DrawableBoxButton(
+				/*DrawableBoxButton(
 					drawable = painterResource(id = R.drawable.cart_minus),
 					onClick = {
 						val updatedQuantity = nesne.yemek_siparis_adet.toInt() - 1
 						if (updatedQuantity > 0) {
-							val updatedItem = nesne.copy(yemek_siparis_adet = updatedQuantity.toString())
+							val updatedItem =
+								nesne.copy(yemek_siparis_adet = updatedQuantity.toString())
 							detailViewModel.updateCart(updatedItem)
 						} else {
 							detailViewModel.deleteCart(nesne.sepet_yemek_id.toInt())
 						}
 					}
-				)
+				)*/
 			}
 		}
 	}

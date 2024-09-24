@@ -47,30 +47,6 @@ fun OnboardingPager(
 						navController.navigate("bottombarscreen") {
 							popUpTo("onboarding") { inclusive = true }
 						}
-
-						/*NavHost(
-				navController = navController,
-				startDestination = if (isFirstLaunch) "onboarding" else "bottombar"
-			) {
-				composable("onboarding") {
-					OnboardingPager(navController = navController)
-				}
-				composable("bottombar") {
-					BottomBarScreen()
-				}
-			}*/
-
-						/*navController.navigate("bottombarscreen") {
-							popUpTo("onboarding") {
-								inclusive = true
-							}
-						}*/
-						//Log.v("mainpage", "clicked")
-						/*navController.context.getSharedPreferences(
-							"MyAppPrefs",
-							Context.MODE_PRIVATE
-						)
-							.edit().putBoolean("isFistLaunch", false).apply()*/
 					},
 					modifier = Modifier.padding(16.dp)
 				) {

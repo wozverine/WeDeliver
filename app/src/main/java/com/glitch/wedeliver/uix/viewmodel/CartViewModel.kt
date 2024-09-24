@@ -15,7 +15,7 @@ class CartViewModel @Inject constructor(var fRepo: FoodsRepository) : ViewModel(
 	var cartList = MutableLiveData<List<CartItem>>()
 
 	init {
-		cartScan()
+		//cartScan()
 	}
 
 	fun saveCart(
@@ -43,7 +43,7 @@ class CartViewModel @Inject constructor(var fRepo: FoodsRepository) : ViewModel(
 
 	fun cartScan() {
 		CoroutineScope(Dispatchers.Main).launch {
-			cartList.value = fRepo.cartScan()
+			cartList.value = fRepo.cartScan() ?: emptyList()
 		}
 	}
 }

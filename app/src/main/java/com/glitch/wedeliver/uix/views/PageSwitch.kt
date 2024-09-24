@@ -7,6 +7,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.glitch.wedeliver.data.entity.CartItem
+import com.glitch.wedeliver.data.entity.FoodItem
 import com.glitch.wedeliver.uix.viewmodel.CartViewModel
 import com.glitch.wedeliver.uix.viewmodel.DetailViewModel
 import com.glitch.wedeliver.uix.viewmodel.MainpageViewModel
@@ -29,14 +30,13 @@ fun PageSwitch(
 		}
 		composable(
 			route = "detailpage/{foodInfo}",
-			//DetailPage()
 			arguments = listOf(
 				navArgument("foodInfo") { type = NavType.StringType }
 			)
 		)
 		{
 			val json = it.arguments?.getString("foodInfo")
-			val nesne = Gson().fromJson(json, CartItem::class.java)
+			val nesne = Gson().fromJson(json, FoodItem::class.java)
 			DetailPage(nesne, detailViewModel)
 		}
 		composable("cartpage") {

@@ -44,5 +44,4 @@ interface FoodsDao {
 		@Field("sepet_yemek_id") sepet_yemek_id: Int,
 		@Field("kullanici_adi") kullanici_adi: String
 	): CRUDAnswer
-
 }
